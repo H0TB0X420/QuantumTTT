@@ -1,0 +1,21 @@
+[project]
+name = "quantum-ttt"
+version = "0.1.0"
+description = "Terminal-based Quantum Tic-Tac-Toe using curses"
+requires-python = ">=3.12"
+dependencies = []
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.2",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/quantum_ttt"]
