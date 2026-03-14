@@ -2,7 +2,8 @@
 
 import curses
 
-from quantum_ttt.board import Board, Player
+from quantum_ttt.board import Board
+from quantum_ttt.quantum import Player
 
 # Color pair IDs.
 COLOR_X = 1
@@ -81,7 +82,8 @@ class Renderer:
             center_y = cy + CELL_H // 2
             center_x = cx + CELL_W // 2
 
-            mark = board.cells[i]
+            cell = board.cells[i]
+            mark = cell.collapsed
             is_cursor = (i == cursor_pos)
             is_winner = winning_line is not None and i in winning_line
 
