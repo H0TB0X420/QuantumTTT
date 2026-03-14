@@ -1,6 +1,7 @@
 """Tests for board state, move validation, and win detection."""
 
-from quantum_ttt.board import Board, Player
+from quantum_ttt.board import Board
+from quantum_ttt.quantum import Cell, Player
 
 
 def test_new_board_is_empty():
@@ -18,14 +19,14 @@ def test_new_board_starts_with_x():
 def test_place_mark_on_empty_cell():
     board = Board()
     assert board.place_mark(0, Player.X)
-    assert board.cells[0] == Player.X
+    assert board.cells[0].collapsed == Player.X
 
 
 def test_place_mark_rejects_occupied_cell():
     board = Board()
     board.place_mark(0, Player.X)
     assert not board.place_mark(0, Player.O)
-    assert board.cells[0] == Player.X
+    assert board.cells[0].collapsed == Player.X
 
 
 def test_toggle_player():
@@ -37,12 +38,20 @@ def test_toggle_player():
     assert board.current_player == Player.X
 
 
+def _make_collapsed_cells(players: list[Player]) -> list[Cell]:
+    """Helper to build a list of collapsed cells from a flat list of players."""
+    assert len(players) == 9
+    return [Cell(collapsed=p) for p in players]
+
+
 def test_is_full():
     board = Board()
     assert not board.is_full()
-    board.cells = [Player.X, Player.O, Player.X,
-                   Player.X, Player.O, Player.O,
-                   Player.O, Player.X, Player.X]
+    board.cells = _make_collapsed_cells([
+        Player.X, Player.O, Player.X,
+        Player.X, Player.O, Player.O,
+        Player.O, Player.X, Player.X,
+    ])
     assert board.is_full()
 
 
@@ -83,17 +92,21 @@ def test_check_winner_column():
 
 def test_is_draw():
     board = Board()
-    board.cells = [Player.X, Player.O, Player.X,
-                   Player.X, Player.O, Player.O,
-                   Player.O, Player.X, Player.X]
+    board.cells = _make_collapsed_cells([
+        Player.X, Player.O, Player.X,
+        Player.X, Player.O, Player.O,
+        Player.O, Player.X, Player.X,
+    ])
     assert board.is_draw()
 
 
 def test_is_draw_false_with_winner():
     board = Board()
-    board.cells = [Player.X, Player.X, Player.X,
-                   Player.O, Player.O, Player.X,
-                   Player.O, Player.X, Player.O]
+    board.cells = _make_collapsed_cells([
+        Player.X, Player.X, Player.X,
+        Player.O, Player.O, Player.X,
+        Player.O, Player.X, Player.O,
+    ])
     assert not board.is_draw()
 
 
@@ -102,5 +115,5 @@ def test_reset():
     board.place_mark(0, Player.X)
     board.toggle_player()
     board.reset()
-    assert all(cell is None for cell in board.cells)
+    assert all(cell.is_empty for cell in board.cells)
     assert board.current_player == Player.X

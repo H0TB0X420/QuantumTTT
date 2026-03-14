@@ -41,3 +41,7 @@ uv run python -m quantum_ttt.main
 ```bash
 uv run pytest
 ```
+
+## Acknowledgements
+This game is from Math Games with Bad Drawings by Ben Orlin
+
