@@ -43,5 +43,5 @@ uv run pytest
 ```
 
 ## Acknowledgements
-This game is from Math Games with Bad Drawings by Ben Orlin
+This game is from **Math Games with Bad Drawings** by Ben Orlin
 
